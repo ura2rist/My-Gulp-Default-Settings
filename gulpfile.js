@@ -39,7 +39,7 @@ let path = {                                                               // П
     scss: source_folder + '/scss/**/*.scss',
     js: source_folder + '/script/**/*.js',
     img: source_folder + '/img/**/*.{jpg, jpeg, png, svg}',
-    addition_css: source_folder + '/scss/addition_css', 
+    addition_css: source_folder + '/scss/addition_css/*', 
   },
   clean: './' + project_folder + '/',                                      // Путь который нужно очищать
 }
