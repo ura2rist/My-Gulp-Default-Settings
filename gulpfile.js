@@ -23,8 +23,9 @@ let path = {                                                               // П
     pug: [source_folder + '/*.pug', '!' + source_folder + '/_*.pug'],      // Исходник pug, все файлы с расширением .pug кроме тех которые начинаются на _
     scss: source_folder + '/scss/style.scss',                              // Исходники scss
     js: source_folder + '/script/script.js',                               // Исходники js
-    img: source_folder + '/img/**/*',                                        // Исходники картинок
+    img: source_folder + '/img/**/*',                                      // Исходники картинок
     fonts: source_folder + '/fonts/*.ttf',                                 // Исходник шрифтов
+    addition_css: source_folder + '/scss/addition_css',                    // Дополнительные файлы CSS                       
   },
   build: {                                                                 // Путь к проекту
     html: project_folder + '/',                                            // Место куда сохраняются HTML после обработки pug
@@ -38,6 +39,7 @@ let path = {                                                               // П
     scss: source_folder + '/scss/**/*.scss',
     js: source_folder + '/script/**/*.js',
     img: source_folder + '/img/**/*.{jpg, jpeg, png, svg}',
+    addition_css: source_folder + '/scss/addition_css', 
   },
   clean: './' + project_folder + '/',                                      // Путь который нужно очищать
 }
@@ -87,6 +89,11 @@ function scssToCss(){                                                      // О
           .pipe(browsersync.stream())                                      // Вызов метода преобразования потока
 };
 
+function additionCss(){
+  return src(path.src.addition_css)
+          .pipe(dest(path.build.css))
+}
+
 function js(){                                                             // Обработка js
   return src(path.src.js)                                                  // Исходный файл js
           .pipe(fileinclude())                                             // Собираем подключаемые файлы
@@ -105,7 +112,8 @@ function watchFiles(){
   gulp.watch([path.watch.pug], pugForHtml);                                // Прослушивание файла и что выполнять при изменении
   gulp.watch([path.watch.scss], scssToCss); 
   gulp.watch([path.watch.js], js);     
-  gulp.watch([path.watch.img], images);                          
+  gulp.watch([path.watch.img], images);       
+  gulp.watch([path.watch.img], additionCss);                    
 };
 
 
@@ -160,7 +168,7 @@ function clean(){                                                          // У
   return del(path.clean)
 };
 
-let build = gulp.series(clean, gulp.parallel(pugForHtml, images, scssToCss, js, fonts), fontsStyle);      // series - поочередное выполнение задач
+let build = gulp.series(clean, gulp.parallel(pugForHtml, images, scssToCss, additionCss, js, fonts), fontsStyle);      // series - поочередное выполнение задач
 let watch = gulp.parallel(build, watchFiles, browserSync);                 // parallel - выполнение задач одновременно
 
 exports.watch = watch;
