@@ -25,7 +25,7 @@ let path = {                                                               // П
     js: source_folder + '/script/script.js',                               // Исходники js
     img: source_folder + '/img/**/*',                                      // Исходники картинок
     fonts: source_folder + '/fonts/*.ttf',                                 // Исходник шрифтов
-    addition_css: source_folder + '/scss/addition_css',                    // Дополнительные файлы CSS                       
+    addition_css: source_folder + '/scss/addition_css/**/*',                    // Дополнительные файлы CSS                       
   },
   build: {                                                                 // Путь к проекту
     html: project_folder + '/',                                            // Место куда сохраняются HTML после обработки pug
