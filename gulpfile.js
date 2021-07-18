@@ -25,7 +25,8 @@ let path = {                                                               // П
     js: source_folder + '/script/script.js',                               // Исходники js
     img: source_folder + '/img/**/*',                                      // Исходники картинок
     fonts: source_folder + '/fonts/*.ttf',                                 // Исходник шрифтов
-    addition_css: source_folder + '/scss/addition_css/**/*',                    // Дополнительные файлы CSS                       
+    addition_css: source_folder + '/scss/addition_css/**/*',                    // Дополнительные файлы CSS      
+    addition_js: source_folder + '/script/addition_js/**/*',                   
   },
   build: {                                                                 // Путь к проекту
     html: project_folder + '/',                                            // Место куда сохраняются HTML после обработки pug
@@ -40,6 +41,7 @@ let path = {                                                               // П
     js: source_folder + '/script/**/*.js',
     img: source_folder + '/img/**/*.{jpg, jpeg, png, svg}',
     addition_css: source_folder + '/scss/addition_css/*', 
+    addition_js: source_folder + '/script/addition_js/**/*',
   },
   clean: './' + project_folder + '/',                                      // Путь который нужно очищать
 }
@@ -94,6 +96,11 @@ function additionCss(){
           .pipe(dest(path.build.css))
 }
 
+function additionJs(){
+  return src(path.src.addition_js)
+          .pipe(dest(path.build.js))
+}
+
 function js(){                                                             // Обработка js
   return src(path.src.js)                                                  // Исходный файл js
           .pipe(fileinclude())                                             // Собираем подключаемые файлы
@@ -113,7 +120,8 @@ function watchFiles(){
   gulp.watch([path.watch.scss], scssToCss); 
   gulp.watch([path.watch.js], js);     
   gulp.watch([path.watch.img], images);       
-  gulp.watch([path.watch.img], additionCss);                    
+  gulp.watch([path.watch.addition_css], additionCss);     
+  gulp.watch([path.watch.addition_js], additionJs);                     
 };
 
 
@@ -168,7 +176,7 @@ function clean(){                                                          // У
   return del(path.clean)
 };
 
-let build = gulp.series(clean, gulp.parallel(pugForHtml, images, scssToCss, additionCss, js, fonts), fontsStyle);      // series - поочередное выполнение задач
+let build = gulp.series(clean, gulp.parallel(pugForHtml, images, scssToCss, additionCss, additionJs, js, fonts), fontsStyle);      // series - поочередное выполнение задач
 let watch = gulp.parallel(build, watchFiles, browserSync);                 // parallel - выполнение задач одновременно
 
 exports.watch = watch;
